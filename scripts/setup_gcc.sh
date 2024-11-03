@@ -34,11 +34,11 @@ for VER in "${VERSION_LIST[@]}"; do
     mapfile -t CONF_LIST <<< "${tmp_list}"
     for CONF in "${CONF_LIST[@]}"; do
         # Use glibc version 2.26
-        sed -i "s/CT_GLIBC_V_2_27=y/# CT_GLIBC_V_2_27 is not set/g" "$CONF"
-        sed -i "s/# CT_GLIBC_V_2_26 is not set/CT_GLIBC_V_2_26=y/g" "$CONF"
-        sed -i "s/CT_GLIBC_VERSION=\"2.27\"/CT_GLIBC_VERSION=\"2.26\"/g" "$CONF"
-        sed -i "s/CT_GLIBC_2_27_or_later=y/CT_GLIBC_older_than_2_27=y/g" "$CONF"
-        sed -i "s/CT_GLIBC_later_than_2_26=y/CT_GLIBC_2_26_or_older=y/g" "$CONF"
+        # sed -i "s/CT_GLIBC_V_2_27=y/# CT_GLIBC_V_2_27 is not set/g" "$CONF"
+        # sed -i "s/# CT_GLIBC_V_2_26 is not set/CT_GLIBC_V_2_26=y/g" "$CONF"
+        # sed -i "s/CT_GLIBC_VERSION=\"2.27\"/CT_GLIBC_VERSION=\"2.26\"/g" "$CONF"
+        # sed -i "s/CT_GLIBC_2_27_or_later=y/CT_GLIBC_older_than_2_27=y/g" "$CONF"
+        # sed -i "s/CT_GLIBC_later_than_2_26=y/CT_GLIBC_2_26_or_older=y/g" "$CONF"
 
         #    # Use multilib
         #    sed -i "s/# CT_MULTILIB is not set/CT_MULTILIB=y/g" "$CONF"
@@ -52,6 +52,7 @@ for VER in "${VERSION_LIST[@]}"; do
         sed -i "s/CT_TARGET_VENDOR=\"ubuntu18.04\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
         sed -i "s/CT_TARGET_VENDOR=\"ubuntu16.04\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
         sed -i "s/CT_TARGET_VENDOR=\"ubuntu14.04\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
+        sed -i "s/CT_TARGET_VENDOR=\"unknown\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
 
         # Set output paths
         sed -i "s/CT_PREFIX_DIR=\"\${CT_PREFIX:-\${HOME}\/x-tools}\/\${CT_HOST:+HOST-\${CT_HOST}\/}\${CT_TARGET}\"/CT_PREFIX_DIR=\"\${CT_PREFIX:-\${HOME}\/x-tools}\/\${CT_HOST:+HOST-\${CT_HOST}\/}\${CT_TARGET}-\${CT_GCC_VERSION}\"/" "$CONF"
@@ -98,5 +99,5 @@ done
 
 export -f doit
 echo "${#cmds[@]} builds to be processed ..."
-time parallel -j 15 doit ::: "${cmds[@]}"
+time parallel -j 32 doit ::: "${cmds[@]}"
 

@@ -170,7 +170,7 @@ function do_compile()
         fi
 
         # fix compiler version for clang
-        COMPVER="8.2.0"
+        COMPVER="13.2.0"
         export PATH="${TOOL_PATH}/clang/${COMPILER}/bin:${PATH}"
 
         # clang lto is only supported by lld

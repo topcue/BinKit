@@ -1,0 +1,14 @@
+opti:
+  - O0
+  - O1
+  - O2
+  - O3
+  - Os
+  - Ofast
+
+arch:
+  - mips_32
+  
+compiler:
+  - clang-13.0
+  

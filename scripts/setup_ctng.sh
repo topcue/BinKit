@@ -10,8 +10,7 @@ CTNG_BIN="$TOOL_PATH/crosstool-ng/ct-ng"
 CTNG_PATH="$TOOL_PATH/crosstool-ng"
 if [ ! -f "$CTNG_BIN" ]; then
     if [ ! -d "$CTNG_PATH" ]; then
-        # crosstool-ng-1.25.0 is not compatible with current configuration files.
-        git clone -b crosstool-ng-1.24.0 "https://github.com/crosstool-ng/crosstool-ng" "$CTNG_PATH"
+        git clone -b crosstool-ng-1.26.0 "https://github.com/crosstool-ng/crosstool-ng" "$CTNG_PATH"
     fi
     cd "$CTNG_PATH"
     make distclean
