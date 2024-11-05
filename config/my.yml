@@ -8,7 +8,6 @@ opti:
 
 arch:
   - mips_32
-  
+
 compiler:
-  - clang-13.0
-  
+  - clang-13.0.1
