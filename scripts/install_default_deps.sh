@@ -2,24 +2,26 @@
 sudo apt-get update -q
 
 declare -a PACKAGES=(
-    parallel
-    build-essential
-    binutils
-    cmake
-    autogen
     autoconf
+    autogen
     automake
-    tar wget git
-    texinfo
+    binutils
+    bison
+    build-essential
+    cmake
+    flex
+    gcc-multilib
+    git
+    gperf
     help2man
+    libncurses-dev
     libtool
     libtool-bin
-    bison
-    flex
+    parallel
+    tar
+    texinfo
     unzip
-    gperf
-    gcc-multilib
-    libncurses-dev
+    wget
 )
 
 for PACKAGE in "${PACKAGES[@]}"; do

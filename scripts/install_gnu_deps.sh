@@ -2,89 +2,70 @@
 sudo apt-get update -q
 
 declare -a PACKAGES=(
-    parallel
-    build-essential
-    binutils
-    cmake
-    autogen
-    autoconf
-    automake
-    tar wget git
-    texinfo
-    help2man
-    libtool
-    libtool-bin
-    libtoolize
-    libtoolize-dev
-    libcposix
-    libcposix-dev
-    libpcap
-    libpcap-dev
+    ant
+    ant-optional
+    asciidoc
+    checkinstall
+    curl
+    cvs
+    debhelper
+    dh-make
+    gawk
+    git-core
+    git-svn
+    libapr1-dev
+    libaprutil1-dev
+    libcapstone-dev
+    libcurl4-openssl-dev
+    libdaq-dev
+    libdaq2
     libdnet
     libdnet-dev
-    libdumbnet
     libdumbnet-dev
-    daq
-    libdaq-dev
-    libluajit
-    libluajit-dev
-    libluajit-5.1-dev
-    libnghttp2-dev
-    apr
-    libapr1-dev libaprutil1-dev
-    libcurl*-dev
-    libcurl\*-dev
-    libcapstone-dev
-    nasm yasm
-    libqt-dev
-    libqt5-dev
-    libqt4-dev
-    curl
-    libcurl-dev
-    libcurl4-openssl-dev
-    ssh
-    libssl-dev
-    git-core git-svn subversion
-    checkinstall
-    dh-make
-    debhelper
-    ant ant-optional
-    liblzo2-dev libzip-dev
-    sharutils
+    libdumbnet1
     libfuse-dev
-    reprepro
-    asciidoc
-    xmlto
-    libterm
-    libterminal-dev
-    libterminal1-dev
-    libterm-dev
-    ltermlib
-    ncurses
-    ncurses-dev
-    libncurses
-    libncurses-dev
-    libxcurses
-    libxcurses-dev
-    libnxcurses
-    libnxcurses-dev
-    libncursesw5
-    libncursesw5-dev
+    libgl1-mesa-dev
+    libglu1-mesa-dev
+    libgtkglext1
+    libgtkglext1-dev
+    libluajit-5.1-2
+    libluajit-5.1-dev
+    liblzo2-dev
     libncurses5
     libncurses5-dev
-    lib32ncursesw5
-    librsvg-2.0
-    librsvg2-dev
-    libgnomeprintui2
-    libgnome2-dev
+    libncurses6
+    libncursesw5
+    libncursesw5-dev
+    libncursesw6
+    libnghttp2-dev
+    libpcap-dev
     libpopt-dev
+    libqt5x11extras5
+    libreadline-dev
+    librsvg2-2
+    librsvg2-dev
+    libssl-dev
+    libterm-readline-gnu-perl
     libtinfo-dev
-    gdkglext-1.0
-    pkgconfig
-    python3-pkgconfig
-    cvs
-    gawk
+    libx11-xcb-dev
+    libxcb-xinerama0-dev
+    libxi-dev
+    libxkbcommon-dev
+    libxkbcommon-x11-dev
+    libxrender-dev
+    libzip-dev
+    nasm yasm
+    ncurses-dev
+    openssl
+    pkg-config
     postfix
+    python3-pkgconfig
+    qtbase5-dev
+    reprepro
+    sharutils
+    ssh
+    subversion
+    xmlto
 )
 
 for PACKAGE in "${PACKAGES[@]}"; do
