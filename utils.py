@@ -11,7 +11,7 @@ RE_PATTERN = (
     + "clang-obfus-[-a-z2]+|"
     + "gcc|clang)_"
     + "((?:x86|arm|mips|mipseb|ppc)_(?:32|64))_"
-    + "(O0|O1|O2|O3|Os)_"
+    + "(O0|O1|O2|O3|Os|Ofast)_"
     + "(.*)"
 )
 RESTR = re.compile(RE_PATTERN)
