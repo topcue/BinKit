@@ -1,0 +1,27 @@
+opti:
+  - O0
+  - O1
+  - O2
+  - O3
+  - Os
+  - Ofast
+
+arch:
+  - x86_32
+  - x86_64
+  - arm_32
+  - arm_64
+  - mips_32
+  - mips_64
+  - mipseb_32
+  - mipseb_64
+
+compiler:
+  - gcc-13.2.0
+  - clang-9.0.1
+  - clang-10.0.1
+  - clang-11.1.0
+  - clang-12.0.1
+  - clang-13.0.1
+  - clang-14.0.6
+  
