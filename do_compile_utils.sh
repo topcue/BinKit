@@ -256,11 +256,11 @@ function do_compile()
     SYSROOT="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/${ARCH_PREFIX}/sysroot"
     SYSTEM="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/${ARCH_PREFIX}/sysroot/usr/include"
 
-    EXTRA_CFLAGS="${EXTRA_CFLAGS} -fcommon"
+    # EXTRA_CFLAGS="${EXTRA_CFLAGS} -fcommon"
 
-    if [ $ARCH == "x86_64" ]; then
-        local EXTRA_LDFLAGS="-L${EXTRA_DEP_PATH}/install_x86_64/lib -luuid"
-    fi
+    # if [ $ARCH == "x86_64" ]; then
+    #     local EXTRA_LDFLAGS="-L${EXTRA_DEP_PATH}/install_x86_64/lib -luuid"
+    # fi
 
     OPTIONS="${OPTIONS} -${OPTI_LEVEL}"
     if [[ $COMPILER =~ "gcc" ]]; then

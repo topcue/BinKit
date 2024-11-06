@@ -53,6 +53,7 @@ for VER in "${VERSION_LIST[@]}"; do
         sed -i "s/CT_TARGET_VENDOR=\"ubuntu16.04\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
         sed -i "s/CT_TARGET_VENDOR=\"ubuntu14.04\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
         sed -i "s/CT_TARGET_VENDOR=\"unknown\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
+        sed -i "s/CT_TARGET_VENDOR=\"\"/CT_TARGET_VENDOR=\"ubuntu\"/g" "$CONF"
 
         # Set output paths
         sed -i "s/CT_PREFIX_DIR=\"\${CT_PREFIX:-\${HOME}\/x-tools}\/\${CT_HOST:+HOST-\${CT_HOST}\/}\${CT_TARGET}\"/CT_PREFIX_DIR=\"\${CT_PREFIX:-\${HOME}\/x-tools}\/\${CT_HOST:+HOST-\${CT_HOST}\/}\${CT_TARGET}-\${CT_GCC_VERSION}\"/" "$CONF"
