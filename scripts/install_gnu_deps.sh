@@ -13,6 +13,7 @@ declare -a PACKAGES=(
     gawk
     git-core
     git-svn
+    gnulib
     libapr1-dev
     libaprutil1-dev
     libcapstone-dev
@@ -24,6 +25,7 @@ declare -a PACKAGES=(
     libdumbnet-dev
     libdumbnet1
     libfuse-dev
+    libghc-regex-posix-prof
     libgl1-mesa-dev
     libglu1-mesa-dev
     libgtkglext1
