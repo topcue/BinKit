@@ -6,8 +6,8 @@ declare -a archlist=(
     "aarch64-ubuntu-linux-gnu"
     "mipsel-ubuntu-linux-gnu"
     "mips64el-ubuntu-linux-gnu"
-    # "mips-ubuntu-linux-gnu"
-    # "mips64-ubuntu-linux-gnu"
+    "mips-ubuntu-linux-gnu"
+    "mips64-ubuntu-linux-gnu"
     
     # "powerpc-ubuntu-linux-gnu"
     # "powerpc64-ubuntu-linux-gnu"
