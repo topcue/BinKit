@@ -10,7 +10,10 @@ CTNG_BIN="$TOOL_PATH/crosstool-ng/ct-ng"
 CTNG_PATH="$TOOL_PATH/crosstool-ng"
 if [ ! -f "$CTNG_BIN" ]; then
     if [ ! -d "$CTNG_PATH" ]; then
-        git clone -b crosstool-ng-1.26.0 "https://github.com/crosstool-ng/crosstool-ng" "$CTNG_PATH"
+        wget -P /tmp https://github.com/crosstool-ng/crosstool-ng/releases/download/crosstool-ng-1.26.0/crosstool-ng-1.26.0.tar.xz
+        tar -xf /tmp/crosstool-ng-1.26.0.tar.xz -C /tmp/
+        mv /tmp/crosstool-ng-1.26.0 $CTNG_PATH
+        rm -rf /tmp/crosstool-ng-1.26.0 /tmp/crosstool-ng-1.26.0.tar.xz
     fi
     cd "$CTNG_PATH"
     make distclean
