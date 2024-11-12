@@ -159,7 +159,7 @@ def generate_ctng_config(arch, conf_output_path=CTNG_CONF_OUTPUT):
     else:
         select_config(CT_CONF[arch], CTNG_CONF)
 
-    # Select GCC's version or debug tools
+    # Select the GCC version and unset all debug tools
     os.system(f"{CTNG_BIN} menuconfig")
 
     apply_basic_binkit_patch()
