@@ -246,7 +246,7 @@ def compile_package(
             cmds.append(cmd)
             #print(cmd) # for debug
 
-    # using command line parallel is much faster than pytho multiprocessing.
+    # using command line parallel is much faster than python multiprocessing.
     fname = os.path.join(gettmpdir(), "gnu_compile_script_cmds.txt")
     with open(fname, "w") as f:
         f.write("\n".join(cmds) + "\n")
