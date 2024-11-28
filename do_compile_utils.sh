@@ -22,6 +22,7 @@ SUFFIX=${10}
 ECHOON=${11}
 mkdir -p $LOGDIR
 
+COMMAND="${0} $@"
 COMPILETYPE="${COMPILER}_${ARCH}_${OPTI_LEVEL}"
 CONFIGSUB=$(<patches/config.sub)
 
@@ -153,22 +154,12 @@ function do_compile()
         OPTIONS="${OPTIONS} -flto"
     fi
 
+    ##! TODO: 
     if [[ $COMPILER =~ "gcc" ]]; then
-        COMPVER=${COMPILER#"gcc-"}
+        # COMPVER=${COMPILER#"gcc-"}
+        COMPVER="13.2.0"
 
     elif [[ $COMPILER =~ "clang" ]]; then
-        # using LLVM-obfuscator
-        if [[ $COMPILER =~ "obfus" ]]; then
-            OBFUS=${COMPILER#clang-obfus-}
-            if [[ $OBFUS =~ "all-2" ]]; then
-                EXTRA_CFLAGS="${EXTRA_CFLAGS} -mllvm -fla -mllvm -split -mllvm -split_num=2 -mllvm -sub -mllvm -sub_loop=2 -mllvm -bcf -mllvm -bcf_loop=2"
-            elif [[ $OBFUS =~ "all" ]]; then
-                EXTRA_CFLAGS="${EXTRA_CFLAGS} -mllvm -fla -mllvm -sub -mllvm -bcf"
-            else
-                EXTRA_CFLAGS="${EXTRA_CFLAGS} -mllvm -${OBFUS}"
-            fi
-        fi
-
         # fix compiler version for clang
         COMPVER="13.2.0"
         export PATH="${TOOL_PATH}/clang/${COMPILER}/bin:${PATH}"
@@ -253,16 +244,129 @@ function do_compile()
     fi
 
     export PATH="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/bin:${PATH}"
+    LIB_PATH="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/${ARCH_PREFIX}/lib"
     SYSROOT="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/${ARCH_PREFIX}/sysroot"
     SYSTEM="${TOOL_PATH}/${ARCH_PREFIX}-${COMPVER}/${ARCH_PREFIX}/sysroot/usr/include"
+
+
+
+    echo $COMPILER
+    echo $PACKAGE_NAME
+    echo $OPTI_LEVEL
+
+    ##! gawk
+    if [[ $PACKAGE_NAME == "gawk" ]] && [[ $OPTI_LEVEL == "Ofast" ]]; then
+        case "$ARCH" in
+            "x86_32"|"x86_64"|"mips_32"|"mips_64"|"mipseb_32"|"mipseb_64"|"arm_64")
+            case "$COMPILER" in
+                "clang-7.1.0"|"clang-8.0.1"|"clang-9.0.1")
+                    EXTRA_CFLAGS="${EXTRA_CFLAGS} -fno-finite-math-only"
+            esac
+        esac
+    fi
+
+    ##! gcal
+    if [[ $PACKAGE_NAME == "gcal" ]] && [[ $OPTI_LEVEL == "Ofast" ]]; then
+        case "$ARCH" in
+            "x86_32"|"x86_64"|"arm_64"|"mips_32"|"mips_64"|"mipseb_32"|"mipseb_64")
+            case "$COMPILER" in
+                "clang-7.1.0"|"clang-8.0.1"|"clang-9.0.1")
+                    EXTRA_CFLAGS="${EXTRA_CFLAGS} -fno-finite-math-only"
+            esac
+        esac
+    fi
+    
+    ##! coreutils
+    if [[ $PACKAGE_NAME == "coreutils" ]] && [[ $OPTI_LEVEL == "Ofast" ]]; then
+        case "$ARCH" in
+            "arm_32")
+            case "$COMPILER" in
+                "clang-10.0.1"|"clang-11.1.0"|"clang-12.0.1"|"clang-13.0.1"|"clang-14.0.6")
+                    EXTRA_CFLAGS="${EXTRA_CFLAGS} -lm"
+            esac
+        esac
+    fi
+
+    ##! coreutils
+    if [[ $PACKAGE_NAME == "coreutils" ]] && [[ $OPTI_LEVEL == "Ofast" ]]; then
+        case "$COMPILER" in
+            "clang-19.1.3")
+                ATTR_PATH="${EXTRA_DEP_PATH}/${ARCH}/attr"
+                LIBACL_PATH="${EXTRA_DEP_PATH}/${ARCH}/libacl"
+                EXTRA_LDFLAGS="${EXTRA_LDFLAGS} -L${ATTR_PATH}/lib -L${LIBACL_PATH}/lib"
+                EXTRA_CFLAGS="${EXTRA_CFLAGS} -I${ATTR_PATH}/include -I${LIBACL_PATH}/include"
+        esac
+    fi
 
     # EXTRA_CFLAGS="${EXTRA_CFLAGS} -fcommon"
 
     # if [ $ARCH == "x86_64" ]; then
-    #     local EXTRA_LDFLAGS="-L${EXTRA_DEP_PATH}/install_x86_64/lib -luuid"
+    #     EXTRA_LDFLAGS="-L${EXTRA_DEP_PATH}/install_x86_64/lib -luuid"
     # fi
 
+    ##! nettle
+    if [[ $PACKAGE_NAME == "nettle" ]]; then
+        GMP_PATH="${EXTRA_DEP_PATH}/${ARCH}/gmp"
+        EXTRA_LDFLAGS="${EXTRA_LDFLAGS} -L${GMP_PATH}/lib"
+        EXTRA_CFLAGS="${EXTRA_CFLAGS} -I${GMP_PATH}/include"
+    fi
+
+    ##! recutils
+    if [[ $PACKAGE_NAME == "recutils" ]]; then
+        if [[ $COMPILER =~ "clang" ]]; then
+            LIBUUID_PATH="${EXTRA_DEP_PATH}/${ARCH}/libuuid"
+            EXTRA_LDFLAGS="${EXTRA_LDFLAGS} -L${LIBUUID_PATH}/lib -luuid"
+            EXTRA_CFLAGS="${EXTRA_CFLAGS} -Wno-implicit-function-declaration"
+        fi
+    fi
+
+    ##! dap
+    if [[ $PACKAGE_NAME == "dap" ]]; then
+        case "$COMPILER" in
+            "clang-16.0.6"|"clang-17.0.6"|"clang-18.1.8"|"clang-19.1.3")
+                EXTRA_CFLAGS="${EXTRA_CFLAGS} -Wno-implicit-function-declaration"
+        esac
+    fi
+
+    ##! time
+    if [[ $PACKAGE_NAME == "time" ]]; then
+        case "$COMPILER" in
+            "clang-16.0.6"|"clang-17.0.6"|"clang-18.1.8"|"clang-19.1.3")
+                EXTRA_CFLAGS="${EXTRA_CFLAGS} -Wno-implicit-function-declaration"
+        esac
+    fi
+
+
+    ##! glpk
+    if [[ $PACKAGE_NAME == "glpk" ]]; then
+        case "$COMPILER" in
+            "clang-7.1.0"|"clang-8.0.1"|"clang-9.0.1")
+                EXTRA_CFLAGS="${EXTRA_CFLAGS} -fno-finite-math-only"
+        esac
+    fi
+
+    ##! datamash
+    if [[ $PACKAGE_NAME == "datamash" ]]; then
+        case "$ARCH" in
+            "x86_32"|"x86_64"|"arm_64"|"mips_32"|"mipseb_32")
+                case "$COMPILER" in
+                    "clang-7.1.0"|"clang-8.0.1"|"clang-9.0.1")
+                        EXTRA_CFLAGS="${EXTRA_CFLAGS} -fno-finite-math-only"
+                esac
+        esac
+    fi
+
+    ##! a2ps
+    if [[ $PACKAGE_NAME == "a2ps" ]]; then
+        LIBPAPER_PATH="${EXTRA_DEP_PATH}/${ARCH}/libpaper"
+        LIBGC_PATH="${EXTRA_DEP_PATH}/${ARCH}/libgc"
+        EXTRA_LDFLAGS="${EXTRA_LDFLAGS} -L${LIBPAPER_PATH}/lib -lpaper -L${LIBGC_PATH}/lib -lgc"
+        EXTRA_CFLAGS="${EXTRA_CFLAGS} -I${LIBPAPER_PATH}/include -I${LIBGC_PATH}/include"
+    fi
+
     OPTIONS="${OPTIONS} -${OPTI_LEVEL}"
+    OPTIONS="${OPTIONS} -L${LIB_PATH} -lc"
+
     if [[ $COMPILER =~ "gcc" ]]; then
         CMD=""
         CMD="--host=\"${ARCH_PREFIX}\""
@@ -273,6 +377,7 @@ function do_compile()
         CMD="${CMD} AR=\"${ARCH_PREFIX}-gcc-ar\""
         CMD="${CMD} RANLIB=\"${ARCH_PREFIX}-gcc-ranlib\""
         CMD="${CMD} NM=\"${ARCH_PREFIX}-gcc-nm\""
+        CMD="${CMD} LIBS=\"-lc\""
 
     elif [[ $COMPILER =~ "clang" ]]; then
         CMD="--host=\"${ARCH_PREFIX}\""
@@ -294,6 +399,7 @@ function do_compile()
         CMD="${CMD} AR=\"llvm-ar\""
         CMD="${CMD} RANLIB=\"llvm-ranlib\""
         CMD="${CMD} NM=\"llvm-nm\""
+        CMD="${CMD} LIBS=\"-lc\""
     fi
 
     # coreutils time_t force to 32-bit
@@ -302,7 +408,6 @@ function do_compile()
             CMD="${CMD} TIME_T_32_BIT_OK=yes"
         fi
     fi
-
 
     AUTO="autoconf"
     #CONF="./configure --build=x86_64-linux-gnu ${CMD}"
@@ -313,18 +418,24 @@ function do_compile()
     INS="make install"
     if [[ $ECHOON == "False" ]]; then
         AUTO="${AUTO} >${LOGDIR}/${LOGPREFIX}_autoconf.log"
-        AUTO="${AUTO} 2>${LOGDIR}/${LOGPREFIX}_autoconf_error.log"
+        AUTO="${AUTO} 2>${LOGDIR}/${LOGPREFIX}_autoconf.error"
         CONF="${CONF} >${LOGDIR}/${LOGPREFIX}_configure.log"
-        CONF="${CONF} 2>${LOGDIR}/${LOGPREFIX}_configure_error.log"
+        CONF="${CONF} 2>${LOGDIR}/${LOGPREFIX}_configure.error"
         MAKE="${MAKE} >${LOGDIR}/${LOGPREFIX}_make.log"
-        MAKE="${MAKE} 2>${LOGDIR}/${LOGPREFIX}_make_error.log"
+        MAKE="${MAKE} 2>${LOGDIR}/${LOGPREFIX}_make.error"
         INS="${INS} >${LOGDIR}/${LOGPREFIX}_install.log"
-        INS="${INS} 2>${LOGDIR}/${LOGPREFIX}_install_error.log"
+        INS="${INS} 2>${LOGDIR}/${LOGPREFIX}_install.error"
     fi
 
 
     # -------- now start compiling! -------------
     #echo "[+] running $VER $COMPILER $ARCH $OPT ----"
+
+    echo -e "export PATH=\"${TOOL_PATH}/clang/${COMPILER}/bin:${PATH}\"\n" > ${LOGDIR}/${LOGPREFIX}_cmd.log
+    echo -e "$COMMAND\n" >> ${LOGDIR}/${LOGPREFIX}_cmd.log
+    echo -e "$CONF" >> ${LOGDIR}/${LOGPREFIX}_cmd.log
+
+
 
     if [[ $AUTOCONF == "AUTOCONF" ]]; then
         # autoconf
@@ -333,6 +444,9 @@ function do_compile()
 
     # DELETE DEFAULT OPTIMAZATION LEVEL
     sed -i "s/-O[s0-9]*//g" "configure"
+
+    ##! [DEBUG]
+    # echo $CONF
 
     # configure
     eval $CONF
@@ -378,14 +492,13 @@ function do_compile()
     if [ "$CNT" -gt "0" ]; then
         OUTSTR="${LOGPREFIX}: COMPILE SUCCESS!!"
         touch "${LOGDIR}/${LOGPREFIX}_success"
-
     else
         OUTSTR="${LOGPREFIX}: COMPILE FAIL."
         touch "${LOGDIR}/${LOGPREFIX}_fail"
+    fi
 
-        if [ -f config.log ]; then
-            cp config.log "${LOGDIR}/${LOGPREFIX}_config.log"
-        fi
+    if [ -f config.log ]; then
+        cp config.log "${LOGDIR}/${LOGPREFIX}_config.log"
     fi
 
     if [[ $ECHOON == "True" ]]; then
@@ -393,6 +506,9 @@ function do_compile()
     fi
 
     cd ..
+    if [ "$CNT" -gt "0" ]; then
+        rm -rf "${NEW_WORK_DIR}"
+    fi
     rm -rf "${NEW_WORK_DIR}"
 }
 
@@ -417,11 +533,11 @@ CNT=0
 if [[ $COMPILER =~ "gcc" ]]; then
     do_compile "" ""
     do_compile "" "AUTO"
-    do_compile "CCTARGET" ""
-    do_compile "CCTARGET" "AUTO"
+    # do_compile "CCTARGET" ""
+    # do_compile "CCTARGET" "AUTO"
 elif [[ $COMPILER =~ "clang" ]]; then
     do_compile "CCTARGET" ""
     do_compile "CCTARGET" "AUTO"
-    do_compile "" ""
-    do_compile "" "AUTO"
+    # do_compile "" ""
+    # do_compile "" "AUTO"
 fi

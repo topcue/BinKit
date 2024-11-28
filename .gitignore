@@ -1,5 +1,6 @@
 back
 ctng_conf/*.conf
+ctng_conf_new
 config/single
 dataset
 tools

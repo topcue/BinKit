@@ -205,12 +205,16 @@ def compile_package(
 ):
     t0 = time.time()
     cmds = []
+
     logger.info("[+] start compiling %d packages ...", len(to_compile))
     for package in packages:
         package_name = package["name"]
         if package_name not in to_compile or len(to_compile[package_name]) == 0:
             # no need to compile this package since it is already checked!
             continue
+
+        logger.info("")
+        logger.info(f"[*] Compiling {package_name}..")
 
         opts = to_compile[package_name]
         logger.debug("%s: %d options left", package_name, len(opts))
@@ -244,17 +248,21 @@ def compile_package(
                 ]
             )
             cmds.append(cmd)
-            #print(cmd) # for debug
+            # print(cmd) # for debug
 
-    # using command line parallel is much faster than python multiprocessing.
-    fname = os.path.join(gettmpdir(), "gnu_compile_script_cmds.txt")
-    with open(fname, "w") as f:
-        f.write("\n".join(cmds) + "\n")
+        # using command line parallel is much faster than python multiprocessing.
+        fname = os.path.join(gettmpdir(), f"gnu_compile_script_cmds_{package_name}.txt")
+        with open(fname, "w") as f:
+            f.write("\n".join(cmds) + "\n")
 
-    if len(cmds) < num_jobs:
-        num_jobs = len(cmds)
+        if len(cmds) < num_jobs:
+            num_jobs = len(cmds)
 
-    os.system("parallel -j {0} :::: {1}".format(num_jobs, fname))
+        time_per_package = time.time()
+        os.system("parallel -j {0} :::: {1}".format(num_jobs, fname))
+        time_comp = time.time() - time_per_package
+        logger.info(f"[+] Compilation complete: {package_name} (%0.3fs)", time_comp)
+        os.system(f'echo {time_comp} > ~/log/{package_name}') ##! Fix me
     logger.info("done. %0.3fs", time.time() - t0)
 
 
